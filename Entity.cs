@@ -2,13 +2,13 @@
 
 namespace Sayda.Core.Domain
 {
-	public abstract class Entity
+	public abstract class Entity<T>
 	{
-		public Guid Id { get; protected set; }
+		public T Id { get; protected set; }
 
 		public override bool Equals (object obj)
 		{
-			var other = obj as Entity;
+			var other = obj as Entity<T>;
 
 			if (ReferenceEquals(other, null))
 				return false;
@@ -19,13 +19,69 @@ namespace Sayda.Core.Domain
 			if (GetType() != other.GetType())
 				return false;
 
-			if (Id == Guid.Empty || other.Id == Guid.Empty)
-				return false;
 
-			return Id == other.Id;
+			if (typeof(T) == typeof(Guid))
+			{
+				var _id = Guid.Parse(Id.ToString());
+				var otherId = Guid.Parse(other.Id.ToString());
+				if
+					(
+						_id == Guid.Empty ||
+						otherId == Guid.Empty
+					)
+					return false;
+				else
+					return _id == otherId;
+			}
+
+			if (typeof(T) == typeof(long))
+			{
+				var _id = long.Parse(Id.ToString());
+				var otherId = long.Parse(other.Id.ToString());
+				if
+					(
+						_id == 0 ||
+						otherId == 0
+					)
+					return false;
+				else
+					return _id == otherId;
+			}
+			
+			if (typeof(T) == typeof(int))
+			{
+				var _id = int.Parse(Id.ToString());
+				var otherId = int.Parse(other.Id.ToString());
+				if
+					(
+						_id == 0 ||
+						otherId == 0
+					)
+					return false;
+				else
+					return _id == otherId;
+			}
+
+			if (typeof(T) == typeof(string))
+			{
+				var _id = Id.ToString();
+				var otherId = other.Id.ToString();
+				if
+					(
+						string.IsNullOrWhiteSpace(_id) ||
+						string.IsNullOrWhiteSpace(otherId)
+					)
+					return false;
+				else
+					return _id == otherId;
+			}
+
+
+			return false;
+
 		}
 
-		public static bool operator == (Entity a, Entity b)
+		public static bool operator == (Entity<T> a, Entity<T> b)
 		{
 			if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
 				return true;
@@ -36,7 +92,7 @@ namespace Sayda.Core.Domain
 			return a.Equals(b);
 		}
 
-		public static bool operator != (Entity a, Entity b)
+		public static bool operator != (Entity<T> a, Entity<T> b)
 		{
 			return !(a == b);
 		}

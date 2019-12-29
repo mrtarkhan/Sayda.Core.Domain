@@ -2,7 +2,7 @@
 
 namespace Sayda.Core.Domain
 {
-	public abstract class AggregateRoot : Entity
+	public abstract class AggregateRoot<TId> : Entity<TId>
 	{
 		private readonly List<DomainEvent> _domainEvents = new List<DomainEvent>();
 		public virtual IReadOnlyList<DomainEvent> DomainEvents => _domainEvents;
