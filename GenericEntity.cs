@@ -4,7 +4,12 @@ namespace Sayda.Core.Domain
 {
 	public abstract class Entity<T>
 	{
-		public T Id { get; protected set; }
+		public Entity (T id)
+		{
+			Id = id;
+		}
+
+		internal T Id { get; private set; }
 
 		public override bool Equals (object obj)
 		{
